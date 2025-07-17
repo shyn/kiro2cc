@@ -1,89 +1,47 @@
-# Kiro Auth Token 管理工具
+# kiro2cc
 
-这是一个Go命令行工具，用于管理Kiro认证token和提供Anthropic API代理服务。
+一个让claude-code使用kiro免费claude模型的工具。它能自动帮你管理kiro授权、启动本地代理并配置好环境变量。
 
-## 功能
+## 1. 安装
 
--   读取用户目录下的 `.aws/sso/cache/kiro-auth-token.json` 文件
--   使用refresh token刷新access token
--   导出环境变量供其他工具使用
--   启动HTTP服务器作为Anthropic Claude API的代理
+### macOS / Linux
+```bash
+curl -sSL https://raw.githubusercontent.com/deepwind/kiro2cc/main/install.sh | bash
+```
+> 脚本会将 `kiro2cc` 安装到 `$HOME/.local/bin`。请确保这个目录在你的 `PATH` 中。
 
-## 编译
+### Windows
+1.  从 [Releases 页面](https://github.com/deepwind/kiro2cc/releases/latest)下载最新的 `.exe` 文件。
+2.  重命名为 `kiro2cc.exe` 并放到一个在系统 `Path` 环境变量里的目录。
+
+## 2. 使用
+
+安装 `claude` 后，用 `kiro2cc claude` 来启动 `claude-code`。
 
 ```bash
-go build -o kiro-auth main.go
+# 启动 claude-code
+kiro2cc claude
+
+# 也可以传递参数
+kiro2cc claude --version
 ```
 
-## 使用方法
+`kiro2cc` 会在后台自动处理好一切。
 
-### 1. 读取token信息
+## 3. 停止
+
+当你用完后，可以停止后台服务。
 
 ```bash
-./kiro-auth read
+kiro2cc stop
 ```
 
-### 2. 刷新token
+---
 
-```bash
-./kiro-auth refresh
-```
+### 其他命令
 
-### 3. 导出环境变量
+- `kiro2cc server --daemon`: 在后台启动服务。
+- `kiro2cc refresh`: 手动刷新 token。
+- `kiro2cc read`: 查看当前 token 状态。
 
-```bash
-# Linux/macOS
-eval $(./kiro-auth export)
-
-# Windows
-./kiro-auth export
-```
-
-### 4. 启动Anthropic API代理服务器
-
-```bash
-# 使用默认端口8080
-./kiro-auth server
-
-# 指定自定义端口
-./kiro-auth server 9000
-```
-
-## 代理服务器使用方法
-
-启动服务器后，可以通过以下方式使用代理：
-
-1. 将Anthropic API请求发送到本地代理服务器
-2. 代理服务器会自动添加认证信息并转发到Anthropic API
-3. 示例：
-
-```bash
-curl -X POST http://localhost:8080 \
-  -H "Content-Type: application/json" \
-  -d '{"model": "claude-3-opus-20240229", "messages": [{"role": "user", "content": "Hello"}]}'
-```
-
-## Token文件格式
-
-工具期望的token文件格式：
-
-```json
-{
-    "accessToken": "your-access-token",
-    "refreshToken": "your-refresh-token",
-    "expiresAt": "2024-01-01T00:00:00Z"
-}
-```
-
-## 环境变量
-
-工具会设置以下环境变量：
-
--   `ANTHROPIC_BASE_URL`: https://codewhisperer.us-east-1.amazonaws.com/generateAssistantResponse
--   `ANTHROPIC_API_KEY`: 当前的access token
-
-## 跨平台支持
-
--   Windows: 使用 `set` 命令格式
--   Linux/macOS: 使用 `export` 命令格式
--   自动检测用户目录路径
+本项目使用 MIT 许可证。
