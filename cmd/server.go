@@ -10,12 +10,12 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/spf13/cobra"
 	"github.com/shyn/kiro2cc/internal/auth"
 	"github.com/shyn/kiro2cc/internal/client"
 	"github.com/shyn/kiro2cc/internal/config"
 	"github.com/shyn/kiro2cc/internal/proxy"
 	"github.com/shyn/kiro2cc/internal/translator"
-	"github.com/spf13/cobra"
 )
 
 var (
@@ -34,7 +34,6 @@ var serverCmd = &cobra.Command{
 			return fmt.Errorf("failed to get config: %w", err)
 		}
 
-		// Allow port override from flag
 		if port != "" {
 			cfg.Server.Port = port
 		}
@@ -43,12 +42,10 @@ var serverCmd = &cobra.Command{
 			return stopServer(cfg)
 		}
 
-		// If daemon flag is set, start in background
 		if daemon {
 			return startDaemon(cfg)
 		}
 
-		// Otherwise, start in foreground
 		return startServer(cfg)
 	},
 }
@@ -57,7 +54,6 @@ func init() {
 	serverCmd.Flags().StringVarP(&port, "port", "p", "8080", "Port to run the server on")
 	serverCmd.Flags().BoolVarP(&daemon, "daemon", "d", false, "Run the server in the background")
 	serverCmd.Flags().BoolVar(&stop, "stop", false, "Stop the running server")
-	// Command is added in root.go
 }
 
 func startServer(cfg *config.Config) error {
@@ -105,7 +101,7 @@ func startDaemon(cfg *config.Config) error {
 	}
 
 	fmt.Printf("Server started in background with PID: %d on port %s\n", pid, cfg.Server.Port)
-	time.Sleep(1 * time.Second) // Give it a moment to start
+	time.Sleep(1 * time.Second)
 	return nil
 }
 

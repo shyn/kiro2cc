@@ -18,7 +18,7 @@ var readCmd = &cobra.Command{
 			return fmt.Errorf("failed to get config: %w", err)
 		}
 		authService := auth.NewService(cfg)
-		
+
 		token, err := authService.GetToken()
 		if err != nil {
 			return fmt.Errorf("failed to read token: %w", err)
@@ -30,7 +30,7 @@ var readCmd = &cobra.Command{
 		if token.ExpiresAt != "" {
 			fmt.Printf("Expires At: %s\n", token.ExpiresAt)
 		}
-		
+
 		return nil
 	},
 }

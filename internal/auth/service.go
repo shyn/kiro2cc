@@ -126,7 +126,7 @@ func (s *service) RefreshToken() error {
 }
 
 func (s *service) saveToken(token *types.TokenData) error {
-	tokenPath := s.GetTokenFilePath()
+	tokenPath := s.config.Auth.TokenFilePath // Always save to the new path
 	if tokenPath == "" {
 		return fmt.Errorf("unable to determine token file path")
 	}

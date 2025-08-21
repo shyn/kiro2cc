@@ -4,11 +4,11 @@ set -e
 # This script handles downloading and installing the latest kiro2cc binary.
 #
 # Usage:
-#   curl -sSL https://raw.githubusercontent.com/shyn/kiro2cc/main/install.sh | bash
+#   curl -sSL https://raw.githubusercontent.com/deepwind/kiro2cc/main/install.sh | bash
 #
 
 # GitHub repository
-REPO="shyn/kiro2cc"
+REPO="deepwind/kiro2cc"
 
 # Function to detect OS and architecture
 detect_platform() {
@@ -19,27 +19,27 @@ detect_platform() {
     case "$os" in
         linux)
             os="linux"
-            ;;
+            ;; 
         darwin)
             os="macos"
-            ;;
+            ;; 
         *)
             echo "Unsupported OS: $os" >&2
             exit 1
-            ;;
+            ;; 
     esac
 
     case "$arch" in
         x86_64)
             arch="amd64"
-            ;;
+            ;; 
         arm64 | aarch64)
             arch="arm64"
-            ;;
+            ;; 
         *)
             echo "Unsupported architecture: $arch" >&2
             exit 1
-            ;;
+            ;; 
     esac
     echo "$os-$arch"
 }
@@ -96,9 +96,7 @@ main() {
     echo ""
     echo "Please make sure '$install_dir' is in your PATH."
     echo "You can add it to your shell configuration file (e.g., ~/.bashrc, ~/.zshrc) with:"
-    echo "export PATH=\"
-$HOME/.local/bin:$PATH\"
-"
+    echo "export PATH=\"$HOME/.local/bin:$PATH\""
     echo ""
     echo "You can now run 'kiro2cc' from your terminal (you may need to restart it)."
 }

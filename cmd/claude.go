@@ -26,7 +26,6 @@ var claudeCmd = &cobra.Command{
 			return fmt.Errorf("failed to get config: %w", err)
 		}
 
-		// 1. Check and start server
 		if !isRunning(cfg.Server.PIDFilePath) {
 			fmt.Println("Server not running, starting it in the background...")
 			if err := startDaemon(cfg); err != nil {
@@ -36,7 +35,6 @@ var claudeCmd = &cobra.Command{
 			fmt.Println("Server is already running.")
 		}
 
-		// 2. Refresh token
 		fmt.Println("Refreshing token...")
 		authService := auth.NewService(cfg)
 		if err := authService.RefreshToken(); err != nil {
@@ -48,12 +46,10 @@ var claudeCmd = &cobra.Command{
 		}
 		fmt.Println("Token refreshed successfully.")
 
-		// 3. Set environment variables
 		baseURL := fmt.Sprintf("http://localhost:%s", cfg.Server.Port)
 		os.Setenv("ANTHROPIC_BASE_URL", baseURL)
 		os.Setenv("ANTHROPIC_API_KEY", token.AccessToken)
 
-		// 4. Find and execute claude
 		claudePath, err := exec.LookPath("claude")
 		if err != nil {
 			return fmt.Errorf("'claude' executable not found in your PATH. Please ensure it is installed and accessible")
@@ -62,7 +58,6 @@ var claudeCmd = &cobra.Command{
 		fmt.Printf("Executing %s with proxy URL %s\n", claudePath, baseURL)
 		fmt.Println("----------------------------------------")
 
-		// Replace the current process with claude
 		err = syscall.Exec(claudePath, append([]string{"claude"}, args...), os.Environ())
 		if err != nil {
 			return fmt.Errorf("failed to execute 'claude': %w", err)
